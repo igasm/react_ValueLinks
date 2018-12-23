@@ -1,6 +1,27 @@
 import * as React from 'react';
 import './AddUserExtended.css';
 
+function linkState(component, statePartName, attr){
+    return {
+        value: component.state[statePartName][attr],
+        setValue(x){
+            component.setState({[statePartName]: { ...component.state[statePartName], [attr]: x}})
+        }
+    }
+}
+
+const Input = ({link, ...other}) => {
+    const {type, ...restProps} = other;
+    let input;
+
+    switch(type){
+        case 'checkbox': input = <input {...other} onChange= { e => link.setValue(e.target.checked) } checked={link.value}/>; break;
+        default: input = <input {...other} onChange= { e => link.setValue(e.target.value) } value={link.value}/>
+    }
+    
+    return input;
+}
+
 class AddUserExtended extends React.Component {
     state = {
         basicInfo: {
@@ -24,58 +45,31 @@ class AddUserExtended extends React.Component {
         return(
             <form className='form' onSubmit={this.onSubmit} >
                 <label>First name:  
-                    <input 
-                        type='text' 
-                        value={this.state.basicInfo.firstName} onChange={ e=>this.setState({basicInfo: {...this.state.basicInfo, firstName: e.target.value}}) }
-                    />
+                    <Input type='text' link={linkState(this, 'basicInfo', 'firstName')} />
                 </label>            
                 <label>Last name:   
-                    <input 
-                        type='text' 
-                        value={this.state.basicInfo.lastName} onChange={ e=>this.setState({basicInfo: {...this.state.basicInfo, lastName: e.target.value}}) }
-                    />
+                    <Input type='text' link={linkState(this, 'basicInfo', 'lastName')} />
                 </label>
                 <label>Age:   
-                    <input 
-                        type='number' 
-                        value={this.state.basicInfo.age} onChange={ e=>this.setState({basicInfo: {...this.state.basicInfo, age: e.target.value}}) }
-                    />
+                    <Input type='number' link={linkState(this, 'basicInfo', 'age')} />
                 </label>
                 <label>Email:   
-                    <input 
-                        type='text' 
-                        value={this.state.basicInfo.email} onChange={ e=>this.setState({basicInfo: {...this.state.basicInfo, email: e.target.value}}) }
-                    />
+                    <Input type='text' link={linkState(this, 'basicInfo', 'email')} />
                 </label>
                 <label>Is active:
-                    <input
-                        type='checkbox'
-                        checked={this.state.basicInfo.isActive} onChange={ e=>this.setState({basicInfo: {...this.setState, isActive: e.target.checked }}) }
-                    />
+                    <Input type='checkbox' link={linkState(this, 'basicInfo', 'isActive')} />
                 </label>
                 <label>Street:    
-                    <input 
-                        type='text' 
-                        value={this.state.adress.street} onChange={ e=>this.setState({adress: {...this.state.adress, street: e.target.value}}) }
-                    />
+                    <Input type='text' link={linkState(this, 'adress', 'street')} />
                 </label> 
                 <label>House number:    
-                    <input 
-                        type='text' 
-                        value={this.state.adress.houseNumber} onChange={ e=>this.setState({adress: {...this.state.adress, houseNumber: e.target.value}}) }
-                    />
+                    <Input type='text' link={linkState(this, 'adress', 'houseNumber')} />
                 </label>
                 <label>Postal code:    
-                    <input 
-                        type='text' 
-                        value={this.state.adress.postalCode} onChange={ e=>this.setState({adress: {...this.state.adress, postalCode: e.target.value}}) }
-                    />
+                    <Input type='text' link={linkState(this, 'adress', 'postalCode')} />
                 </label>
-                <label>City:    
-                    <input 
-                        type='text' 
-                        value={this.state.adress.city} onChange={ e=>this.setState({adress: {...this.state.adress, city: e.target.value}}) }
-                    />
+                <label>City:
+                    <Input type='text' link={linkState(this, 'adress', 'city')} />
                 </label>
 
                 <button type='submit'>Add user</button>
