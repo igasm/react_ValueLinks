@@ -1,5 +1,27 @@
 import * as React from 'react';
 
+function linkState( component, attr ){
+    return {
+        value: component.state[attr],
+        set(x){
+            component.setState({[attr]: x});
+        }
+    }
+}
+
+const Input = ({link, ...other}) => {
+    const {type, ...restProps} = other;
+    let input;
+
+    switch(type){
+        case 'checkbox': input = <input {...other} onChange= { e => link.set(e.target.checked) } checked={link.value}/>; break;
+        default: input = <input {...other} onChange= { e => link.set(e.target.value) } value={link.value}/>
+    }
+    
+    return input;
+}
+    
+
 class AddUser extends React.Component {
     state = {
         name: '',
@@ -7,37 +29,22 @@ class AddUser extends React.Component {
         isActive: true
     }
 
-    onSubmit = e => { /* logic form submit */ }
+    onSubmit = e => { alert(JSON.stringify(this.state)) }
 
     render(){
-
-    const { state } = this;
-
         return (
             <form onSubmit={this.onSubmit} >
 
                 <label> Name: 
-                    <input 
-                        type='text' 
-                        value = {state.name} 
-                        onChange={ e => this.setState({name: e.target.value})}
-                    />
+                    <Input type='text' link={linkState(this, 'name')} />
                 </label>
 
                 <label> Email: 
-                    <input 
-                        type='text' 
-                        value = {state.email} 
-                        onChange={ e => this.setState({email: e.target.value})}
-                    />
+                    <Input type='text' link={linkState(this, 'email')} />
                 </label>
 
                 <label> Is active: 
-                    <input 
-                    type='checkbox' 
-                    checked = {state.isActive} 
-                    onChange={ e => this.setState({isActive: e.target.checked})}
-                    />
+                    <Input type='checkbox' link={linkState(this, 'isActive')}/>
                 </label>
 
                 <button type='submit'>Add user</button>
