@@ -3,6 +3,19 @@ import Link, { LinkedComponent } from 'valuelink';
 import { Input } from 'valuelink/tags';
 import './AddUser.css';
 
+function FormInput({label, validate, ...props}) {
+    return (
+    <div className={validate ? "validInput" : "invalidInput"}>
+        <label> {label}
+            <Input {...props} />
+            <div className='error-placeholder'>
+                {props.valueLink.error || ''}
+            </div>
+        </label>
+    </div>
+    );
+}
+
 class AddUser extends LinkedComponent {
     state = {
         name: '',
@@ -28,20 +41,8 @@ class AddUser extends LinkedComponent {
         return (
             <form className='form' onSubmit={this.onSubmit} >
 
-                <div className={nameIsValid ? "validInput" : "invalidInput"}>
-                    <label> Name: 
-                        <Input valueLink={nameLink} />
-                    </label>
-                </div>
-
-                <div className={emailIsValid ? "validInput" : "invalidInput"}>
-                    <label> Email: 
-                        <Input valueLink={emailLink} />
-                        <div>
-                            { emailIsValid ? '' : 'Email is required and must be valid'}
-                        </div>
-                    </label>
-                </div>
+                <FormInput label="Name: " valueLink={nameLink} type="text" validate={nameIsValid} />
+                <FormInput label="Email: " valueLink={emailLink} type="text" validate={emailIsValid} />
 
                 <label> Is active: 
                     <Input type="checkbox" checkedLink={Link.state(this,'isActive')}/>
