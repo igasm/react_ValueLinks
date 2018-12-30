@@ -5,7 +5,7 @@ import './AddUser.css';
 
 function FormInput({label, validate, ...props}) {
     return (
-    <div className={validate ? "validInput" : "invalidInput"}>
+    <div className={props.valueLink.error ? "invalidInput" : "validInput"}>
         <label> {label}
             <Input {...props} />
             <div className='error-placeholder'>
@@ -32,23 +32,25 @@ class AddUser extends LinkedComponent {
 
     render(){
 
-        const nameLink = Link.state(this, 'name');
-        const nameIsValid = nameLink.value && nameLink.value.indexOf(' ')<0;
+        const nameLink = Link.state(this, 'name')
+                            .check( value => value, 'Name is required')
+                            .check( value => value.indexOf(' ')<0, 'Name could not contain spaces');
 
-        const emailLink = Link.state(this, 'email');
-        const emailIsValid = emailLink.value && this.validateEmail(emailLink.value);
+        const emailLink = Link.state(this, 'email') //assigning validation
+                            .check( value => value, 'Email is required')
+                            .check( value => this.validateEmail(value), 'Email must be valid');
 
         return (
             <form className='form' onSubmit={this.onSubmit} >
 
-                <FormInput label="Name: " valueLink={nameLink} type="text" validate={nameIsValid} />
-                <FormInput label="Email: " valueLink={emailLink} type="text" validate={emailIsValid} />
+                <FormInput label="Name: " valueLink={nameLink} type="text" />
+                <FormInput label="Email: " valueLink={emailLink} type="text" />
 
                 <label> Is active: 
                     <Input type="checkbox" checkedLink={Link.state(this,'isActive')}/>
                 </label>
 
-                <button disabled={!nameIsValid || !emailIsValid} type='submit'>Add user</button>
+                <button disabled={nameLink.error || emailLink.error} type='submit'>Add user</button>
 
             </form>
         );
