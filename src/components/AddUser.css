@@ -1,0 +1,16 @@
+.invalidInput {
+    padding: 10px;
+    background-color: rgb(243, 45, 45);
+}
+
+.validInput {
+    padding: 10px;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 60vh;
+}
