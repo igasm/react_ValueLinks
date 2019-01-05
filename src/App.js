@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 import './App.css';
-import AddUser from './components/AddUser';
-import AddUserExtended from './components/AddUserExtended';
+import { UsersList } from './components/UsersList';
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <AddUser />
+        <UsersList />
       </div>
     );
   }
