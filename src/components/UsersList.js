@@ -1,6 +1,7 @@
 import * as React from 'react'; 
 import Link from 'valuelink/lib';
 import './UsersList.css';
+import { EditUser } from './EditUser';
 
 const Header = () => (
     <div className="users-row">
@@ -10,7 +11,7 @@ const Header = () => (
     </div>
 )
 
-const UserRow = ({userLink}) => {
+const UserRow = ({userLink, onEdit}) => {
 
     const user = userLink.value;
     const isActiveLink = userLink.at('isActive');
@@ -23,7 +24,7 @@ const UserRow = ({userLink}) => {
                 {user.isActive ? 'Yes' : 'No'}
             </div>
             <div>
-                <button>Edit</button>
+                <button onClick={onEdit}>Edit</button>
                 <button onClick={()=>userLink.remove()}>X</button>
             </div>
         </div>
@@ -40,8 +41,18 @@ export class UsersList extends React.Component {
                     email: 'admin@google.com',
                     isActive: true
                 }
-            ]
+            ],
+            isModalOpen: false,
+            editedUserLink: null
         }
+    }
+
+    edit(userLink){
+        this.setState({isModalOpen: true, editedUserLink: userLink});
+    }
+
+    closeModal(){
+        this.setState({isModalOpen: false, editedUserLink: null});
     }
 
     render(){
@@ -53,9 +64,15 @@ export class UsersList extends React.Component {
                 <Header />
                     {
                         usersLink.map((userLink, index) => (
-                            <UserRow key={index} userLink={userLink} onEdit={()=>this.edit(index)} />
+                            <UserRow key={index} userLink={userLink} onEdit={()=>this.edit(userLink)} />
                         ))
+
                     }
+                <modal isOpen={this.state.isModalOpen} >
+                    <EditUser userLink={this.state.editedUserLink} onClose={this.closeModal}/>
+                </modal>
+
+
             </div>
         )
     }
